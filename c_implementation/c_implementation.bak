@@ -1,0 +1,52 @@
+#define STATION_SPEED 20
+#define LINE_SPEED 100
+
+#define ACC_ANIMATED_LENGTH 3000
+#define ACC_RESET_LENGTH 1000
+#define ACC_RESET_DELAY 2000
+
+long globalCounter = 0;
+
+float speedFactor = 0;
+
+int mainMotorSpeed = LINE_SPEED;
+int accMotorSpeed = STATION_SPEED;
+int descMotorSpeed = LINE_SPEED;
+
+float accMotorProgression = 0;
+float descMotorProgression = 0;
+
+
+/** State of the motor animation (selects what should be done)
+* decel example:
+* -Idle is full speed
+* -Animated is decelerating
+* -Reset in accelerating back to full speed
+*/
+enum accelerationState{Idle, Animated, Reset};
+
+void applyProgressions(){
+
+}
+void updatePhysMotors(){
+    OnFwd(OUT_A, mainMotorSpeed * speedFactor);
+    OnFwd(OUT_B, accMotorSpeed * speedFactor);
+    OnFwd(OUT_C, descMotorSpeed * speedFactor);
+};
+
+int getProgressionValue(int startVal, int targetVal, float progression){
+    return (targetVal - startVal) * progression + startVal;
+}
+
+task main(){
+  accelerationState accMotorState;
+  accelerationState descMotorState;
+     //control loop(every 10ms)
+     while(true){
+         applyProgressions();
+         updatePhysMotors();
+         Wait(10);
+         globalCounter++;
+     }
+}
+//RotateMotorEx(OUT_AB, 100*speedFactor, 180, 50, false, false);
